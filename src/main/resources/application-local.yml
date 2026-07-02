@@ -6,9 +6,8 @@ spring:
     driver-class-name: net.sf.log4jdbc.sql.jdbcapi.DriverSpy
 
 planbridge:
-  azure-openai:
-    api-key: ${AZURE_OPENAI_API_KEY:}
-    endpoint: ${AZURE_OPENAI_ENDPOINT:https://test.openai.azure.com}
+  anthropic:
+    api-key: ${ANTHROPIC_API_KEY:}
 
 logging:
   level:
