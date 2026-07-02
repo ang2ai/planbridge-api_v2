@@ -1,0 +1,14 @@
+spring:
+  datasource:
+    url: ${DB_URL}
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
+    driver-class-name: net.sf.log4jdbc.sql.jdbcapi.DriverSpy
+  jpa:
+    hibernate:
+      ddl-auto: validate
+
+planbridge:
+  azure-openai:
+    api-key: ${AZURE_OPENAI_API_KEY}
+    endpoint: ${AZURE_OPENAI_ENDPOINT}

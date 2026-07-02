@@ -2,11 +2,6 @@ server:
   port: 8080
 
 spring:
-  datasource:
-    url: ${DB_URL:jdbc:log4jdbc:postgresql://111.222.333.44:3332/pg_kms_dev}
-    username: ${DB_USERNAME:planbridge}
-    password: ${DB_PASSWORD:planbridge123}
-    driver-class-name: net.sf.log4jdbc.sql.jdbcapi.DriverSpy
   jpa:
     hibernate:
       ddl-auto: update
@@ -22,16 +17,16 @@ spring:
       write-dates-as-timestamps: false
 
 planbridge:
-  anthropic:
-    api-key: ${ANTHROPIC_API_KEY:}
-    model: ${ANTHROPIC_MODEL:claude-3-5-sonnet-20241022}
-    max-tokens: ${ANTHROPIC_MAX_TOKENS:8096}
+  azure-openai:
+    deployment: gpt-4o
+    api-version: "2024-02-01"
+    max-tokens: 4096
 
 logging:
   level:
-    com.planbridge: DEBUG
-    jdbc.sqlonly: DEBUG
-    jdbc.sqltiming: INFO
+    com.planbridge: INFO
+    jdbc.sqlonly: OFF
+    jdbc.sqltiming: OFF
     jdbc.resultsettable: OFF
     jdbc.audit: OFF
     jdbc.resultset: OFF

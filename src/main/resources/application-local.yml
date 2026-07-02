@@ -1,0 +1,17 @@
+spring:
+  datasource:
+    url: jdbc:log4jdbc:postgresql://111.222.333.44:3332/pg_kms_dev
+    username: planbridge
+    password: planbridge123
+    driver-class-name: net.sf.log4jdbc.sql.jdbcapi.DriverSpy
+
+planbridge:
+  azure-openai:
+    api-key: ${AZURE_OPENAI_API_KEY:}
+    endpoint: ${AZURE_OPENAI_ENDPOINT:https://test.openai.azure.com}
+
+logging:
+  level:
+    com.planbridge: DEBUG
+    jdbc.sqlonly: DEBUG
+    jdbc.sqltiming: INFO
