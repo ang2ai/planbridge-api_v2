@@ -28,16 +28,11 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
     implementation 'org.springframework.boot:spring-boot-starter-validation'
 
-    // Spring Security
-    implementation 'org.springframework.boot:spring-boot-starter-security'
+    // PostgreSQL (사내 표준 DB)
+    runtimeOnly 'org.postgresql:postgresql'
 
-    // JWT
-    implementation 'io.jsonwebtoken:jjwt-api:0.11.5'
-    runtimeOnly 'io.jsonwebtoken:jjwt-impl:0.11.5'
-    runtimeOnly 'io.jsonwebtoken:jjwt-jackson:0.11.5'
-
-    // Oracle JDBC
-    implementation 'com.oracle.database.jdbc:ojdbc11:23.3.0.23.09'
+    // log4jdbc - SQL 로깅 (사내 표준)
+    implementation 'org.bgee.log4jdbc-log4j2:log4jdbc-log4j2-jdbc4.1:1.16'
 
     // Lombok
     compileOnly 'org.projectlombok:lombok'

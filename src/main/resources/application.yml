@@ -3,36 +3,36 @@ server:
 
 spring:
   datasource:
-    url: ${DB_URL:jdbc:oracle:thin:@127.0.0.1:1521/XEPDB1}
+    url: ${DB_URL:jdbc:log4jdbc:postgresql://111.222.333.44:3332/pg_kms_dev}
     username: ${DB_USERNAME:planbridge}
     password: ${DB_PASSWORD:planbridge123}
-    driver-class-name: oracle.jdbc.OracleDriver
+    driver-class-name: net.sf.log4jdbc.sql.jdbcapi.DriverSpy
   jpa:
     hibernate:
-      ddl-auto: none
-    show-sql: true
+      ddl-auto: update
+    show-sql: false
     properties:
       hibernate:
         format_sql: true
-        dialect: org.hibernate.dialect.OracleDialect
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        default_schema: public
   jackson:
     default-property-inclusion: non_null
     serialization:
       write-dates-as-timestamps: false
 
 planbridge:
-  repos-base-path: ${REPOS_BASE_PATH:/repos}
-  git-mirror:
-    url: ${GIT_MIRROR_URL:http://localhost:3001}
-  worker:
-    url: ${WORKER_URL:http://localhost:3002}
-  security:
-    enabled: false
-  jwt:
-    secret: planbridge-jwt-secret-key-must-be-at-least-256-bits-long-for-hs256
-    expiration: 86400000
+  anthropic:
+    api-key: ${ANTHROPIC_API_KEY:}
+    model: ${ANTHROPIC_MODEL:claude-3-5-sonnet-20241022}
+    max-tokens: ${ANTHROPIC_MAX_TOKENS:8096}
 
 logging:
   level:
     com.planbridge: DEBUG
-    org.hibernate.SQL: DEBUG
+    jdbc.sqlonly: DEBUG
+    jdbc.sqltiming: INFO
+    jdbc.resultsettable: OFF
+    jdbc.audit: OFF
+    jdbc.resultset: OFF
+    jdbc.connection: OFF
