@@ -30,7 +30,7 @@ public class AiService {
 
     public AiService(RestTemplateBuilder builder,
                      @Value("${planbridge.anthropic.api-key:}") String apiKey,
-                     @Value("${planbridge.anthropic.model:claude-3-5-sonnet-20241022}") String model,
+                     @Value("${planbridge.anthropic.model:claude-sonnet-5}") String model,
                      @Value("${planbridge.anthropic.max-tokens:4096}") int maxTokens) {
         this.restTemplate = builder
                 .setConnectTimeout(Duration.ofSeconds(30))
