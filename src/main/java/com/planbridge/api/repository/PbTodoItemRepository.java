@@ -11,6 +11,7 @@ import java.util.List;
 @Repository
 public interface PbTodoItemRepository extends JpaRepository<PbTodoItem, String> {
     List<PbTodoItem> findByChangeRequest_RequestIdOrderBySortOrderAsc(String requestId);
+    List<PbTodoItem> findByChangeRequest_Component_ComponentIdOrderByCreatedAtDesc(String componentId);
     List<PbTodoItem> findByStatusOrderByCreatedAtDesc(String status);
     List<PbTodoItem> findByStatusNotOrderByCreatedAtDesc(String status);
     List<PbTodoItem> findByCompletedByAndStatusNot(String completedBy, String status);

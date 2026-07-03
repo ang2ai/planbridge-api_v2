@@ -153,6 +153,15 @@ public class TodoService {
     }
 
     /**
+     * Returns all TODOs whose ChangeRequest targets the given component.
+     * (크롬 익스텐션 개발자 패널에서 사용)
+     */
+    public List<TodoResponse> findByComponentId(String componentId) {
+        return todoItemRepository.findByChangeRequest_Component_ComponentIdOrderByCreatedAtDesc(componentId)
+                .stream().map(TodoResponse::from).collect(Collectors.toList());
+    }
+
+    /**
      * Returns all TODOs that belong to a specific ChangeRequest.
      */
     public List<TodoResponse> findByRequestId(String requestId) {
