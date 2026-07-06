@@ -42,12 +42,10 @@ public class PbPolicy {
     @Column(name = "POLICY_TITLE", nullable = false, length = 500)
     private String policyTitle;
 
-    @Lob
-    @Column(name = "POLICY_CONTENT", nullable = false)
+    @Column(name = "POLICY_CONTENT", nullable = false, columnDefinition = "TEXT")
     private String policyContent;
 
-    @Lob
-    @Column(name = "POLICY_SCHEMA")
+    @Column(name = "POLICY_SCHEMA", columnDefinition = "TEXT")
     private String policySchema;
 
     @Column(name = "TAGS", length = 2000)

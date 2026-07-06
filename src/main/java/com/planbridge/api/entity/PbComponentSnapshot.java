@@ -29,12 +29,10 @@ public class PbComponentSnapshot {
     @JoinColumn(name = "SCAN_HISTORY_ID")
     private PbScanHistory scanHistory;
 
-    @Lob
-    @Column(name = "PROPS_JSON")
+    @Column(name = "PROPS_JSON", columnDefinition = "TEXT")
     private String propsJson;
 
-    @Lob
-    @Column(name = "RECT_JSON")
+    @Column(name = "RECT_JSON", columnDefinition = "TEXT")
     private String rectJson;
 
     @Column(name = "SCREENSHOT_URL", length = 500)

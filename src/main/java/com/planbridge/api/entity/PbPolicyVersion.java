@@ -28,12 +28,10 @@ public class PbPolicyVersion {
     @Column(name = "VERSION_NO", nullable = false)
     private Integer versionNo;
 
-    @Lob
-    @Column(name = "POLICY_CONTENT", nullable = false)
+    @Column(name = "POLICY_CONTENT", nullable = false, columnDefinition = "TEXT")
     private String policyContent;
 
-    @Lob
-    @Column(name = "POLICY_SCHEMA")
+    @Column(name = "POLICY_SCHEMA", columnDefinition = "TEXT")
     private String policySchema;
 
     @Column(name = "CHANGE_REASON", length = 2000)

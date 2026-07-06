@@ -33,8 +33,7 @@ public class PbPolicyLink {
     @Builder.Default
     private String linkType = "APPLIED";
 
-    @Lob
-    @Column(name = "OVERRIDE_CONTENT")
+    @Column(name = "OVERRIDE_CONTENT", columnDefinition = "TEXT")
     private String overrideContent;
 
     @Column(name = "CREATED_AT")

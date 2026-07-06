@@ -51,15 +51,13 @@ public class PbComponent {
     @Column(name = "ELEMENT_ROLE", length = 100)
     private String elementRole;
 
-    @Lob
-    @Column(name = "CURRENT_PROPS")
+    @Column(name = "CURRENT_PROPS", columnDefinition = "TEXT")
     private String currentProps;
 
     @Column(name = "CURRENT_TEXT", length = 4000)
     private String currentText;
 
-    @Lob
-    @Column(name = "CURRENT_SPEC")
+    @Column(name = "CURRENT_SPEC", columnDefinition = "TEXT")
     private String currentSpec;
 
     @Column(name = "DEPTH_LEVEL")
@@ -73,8 +71,7 @@ public class PbComponent {
     @Column(name = "TREE_PATH", length = 2000)
     private String treePath;
 
-    @Lob
-    @Column(name = "REACT_HIERARCHY")
+    @Column(name = "REACT_HIERARCHY", columnDefinition = "TEXT")
     private String reactHierarchy;
 
     @Column(name = "STATUS", length = 20)

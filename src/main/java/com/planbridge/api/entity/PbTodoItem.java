@@ -28,12 +28,10 @@ public class PbTodoItem {
     @Column(name = "TITLE", nullable = false, length = 500)
     private String title;
 
-    @Lob
-    @Column(name = "PROMPT", nullable = false)
+    @Column(name = "PROMPT", nullable = false, columnDefinition = "TEXT")
     private String prompt;
 
-    @Lob
-    @Column(name = "TARGET_FILES")
+    @Column(name = "TARGET_FILES", columnDefinition = "TEXT")
     private String targetFiles;
 
     @Column(name = "COMPLEXITY", length = 20)
@@ -51,8 +49,7 @@ public class PbTodoItem {
     @Builder.Default
     private String status = "PENDING";
 
-    @Lob
-    @Column(name = "TEST_RESULT")
+    @Column(name = "TEST_RESULT", columnDefinition = "TEXT")
     private String testResult;
 
     @Column(name = "COMPLETED_BY", length = 100)

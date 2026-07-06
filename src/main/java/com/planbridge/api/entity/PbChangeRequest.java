@@ -35,20 +35,16 @@ public class PbChangeRequest {
     @Column(name = "TITLE", nullable = false, length = 500)
     private String title;
 
-    @Lob
-    @Column(name = "DESCRIPTION", nullable = false)
+    @Column(name = "DESCRIPTION", nullable = false, columnDefinition = "TEXT")
     private String description;
 
-    @Lob
-    @Column(name = "CURRENT_STATE")
+    @Column(name = "CURRENT_STATE", columnDefinition = "TEXT")
     private String currentState;
 
-    @Lob
-    @Column(name = "DESIRED_STATE")
+    @Column(name = "DESIRED_STATE", columnDefinition = "TEXT")
     private String desiredState;
 
-    @Lob
-    @Column(name = "AI_ANALYSIS")
+    @Column(name = "AI_ANALYSIS", columnDefinition = "TEXT")
     private String aiAnalysis;
 
     @Column(name = "PRIORITY", length = 20)

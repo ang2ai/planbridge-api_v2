@@ -1,6 +1,6 @@
 spring:
   datasource:
-    url: jdbc:log4jdbc:postgresql://111.222.333.44:3332/pg_kms_dev
+    url: jdbc:log4jdbc:postgresql://localhost:5432/planbridge_dev
     username: planbridge
     password: planbridge123
     driver-class-name: net.sf.log4jdbc.sql.jdbcapi.DriverSpy

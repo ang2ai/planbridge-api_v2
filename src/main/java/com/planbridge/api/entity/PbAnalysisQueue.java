@@ -31,8 +31,7 @@ public class PbAnalysisQueue {
     @Column(name = "REQUEST_ID", length = 36)
     private String requestId;
 
-    @Lob
-    @Column(name = "REQUEST_PAYLOAD", nullable = false)
+    @Column(name = "REQUEST_PAYLOAD", nullable = false, columnDefinition = "TEXT")
     private String requestPayload;
 
     @Column(name = "STATUS", length = 20)
@@ -42,8 +41,7 @@ public class PbAnalysisQueue {
     @Column(name = "WORKER_ID", length = 100)
     private String workerId;
 
-    @Lob
-    @Column(name = "RESULT")
+    @Column(name = "RESULT", columnDefinition = "TEXT")
     private String result;
 
     @Column(name = "ERROR_MESSAGE", length = 4000)
