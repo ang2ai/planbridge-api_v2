@@ -69,9 +69,16 @@ public class AiService {
                 List<Map<String, Object>> content =
                         (List<Map<String, Object>>) response.getBody().get("content");
                 if (content != null && !content.isEmpty()) {
-                    String text = (String) content.get(0).get("text");
-                    log.debug("Anthropic API 응답 수신: {} chars", text != null ? text.length() : 0);
-                    return text;
+                    // 최신 모델은 thinking 블록이 먼저 올 수 있음 → type=text 블록을 찾아 병합
+                    StringBuilder sb = new StringBuilder();
+                    for (Map<String, Object> block : content) {
+                        if ("text".equals(block.get("type")) && block.get("text") != null) {
+                            sb.append(block.get("text"));
+                        }
+                    }
+                    String text = sb.toString();
+                    log.debug("Anthropic API 응답 수신: {} chars ({}개 블록)", text.length(), content.size());
+                    if (!text.isBlank()) return text;
                 }
             }
             throw new RuntimeException("Anthropic API 응답이 비어있습니다");
