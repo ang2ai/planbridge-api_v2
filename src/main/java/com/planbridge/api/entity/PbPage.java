@@ -7,7 +7,8 @@ import org.hibernate.annotations.GenericGenerator;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "PB_PAGE")
+@Table(name = "PB_PAGE",
+        uniqueConstraints = @UniqueConstraint(name = "UK_PB_PAGE_PROJECT_ROUTE", columnNames = {"PROJECT_ID", "ROUTE_PATH"}))
 @Getter
 @Setter
 @NoArgsConstructor
