@@ -65,7 +65,7 @@ public class ComponentService {
                 .orElseThrow(() -> new ResourceNotFoundException("Project", projectId));
 
         // 페이지 upsert
-        PbPage page = pageRepository.findByProject_ProjectIdAndRoutePath(projectId, req.getRoutePath())
+        PbPage page = pageRepository.findFirstByProject_ProjectIdAndRoutePathOrderByPageIdAsc(projectId, req.getRoutePath())
                 .orElseGet(() -> {
                     PbPage newPage = PbPage.builder()
                             .project(project)
@@ -85,10 +85,23 @@ public class ComponentService {
         int newCount = 0;
         int changedCount = 0;
 
+        // 리스트 렌더링(.map())된 요소는 동일 pbId를 공유하므로 pbId 기준 중복 제거
+        // (같은 소스 위치의 컴포넌트 정의는 스캔 배치 내에서 한 번만 처리)
+        List<ScanDataRequest.ComponentData> dedupedComponents = new ArrayList<>();
+        Set<String> seenPbIds = new HashSet<>();
         if (req.getComponents() != null) {
-            // 1차: pbId 없는 것(parent 참조 없는) 먼저 저장
             for (ScanDataRequest.ComponentData cd : req.getComponents()) {
-                Optional<PbComponent> existing = componentRepository.findByPage_PageIdAndPbId(page.getPageId(), cd.getPbId());
+                if (cd.getPbId() != null && seenPbIds.add(cd.getPbId())) {
+                    dedupedComponents.add(cd);
+                }
+            }
+        }
+
+        if (!dedupedComponents.isEmpty()) {
+            // 1차: pbId 없는 것(parent 참조 없는) 먼저 저장
+            for (ScanDataRequest.ComponentData cd : dedupedComponents) {
+                Optional<PbComponent> existing =
+                        componentRepository.findFirstByPage_PageIdAndPbIdOrderByComponentIdAsc(page.getPageId(), cd.getPbId());
                 PbComponent comp;
                 if (existing.isPresent()) {
                     comp = existing.get();
@@ -124,7 +137,7 @@ public class ComponentService {
             }
 
             // 2차: parent 연결
-            for (ScanDataRequest.ComponentData cd : req.getComponents()) {
+            for (ScanDataRequest.ComponentData cd : dedupedComponents) {
                 if (cd.getParentPbId() != null && pbIdMap.containsKey(cd.getParentPbId())) {
                     PbComponent comp = pbIdMap.get(cd.getPbId());
                     comp.setParent(pbIdMap.get(cd.getParentPbId()));
@@ -146,8 +159,8 @@ public class ComponentService {
         scanHistoryRepository.save(scanHistory);
 
         // 각 컴포넌트에 대해 스냅샷 저장
-        if (req.getComponents() != null) {
-            for (ScanDataRequest.ComponentData cd : req.getComponents()) {
+        if (!dedupedComponents.isEmpty()) {
+            for (ScanDataRequest.ComponentData cd : dedupedComponents) {
                 PbComponent comp = pbIdMap.get(cd.getPbId());
                 if (comp == null) continue;
 

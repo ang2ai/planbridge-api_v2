@@ -14,7 +14,8 @@ import java.util.Optional;
 public interface PbComponentRepository extends JpaRepository<PbComponent, String> {
     List<PbComponent> findByPage_PageIdOrderByDepthLevelAscSortOrderAsc(String pageId);
     List<PbComponent> findByPage_PageIdAndParentIsNull(String pageId);
-    Optional<PbComponent> findByPage_PageIdAndPbId(String pageId, String pbId);
+    // 리스트 렌더링(.map())된 요소는 동일 pbId를 공유할 수 있어 결과가 여러 건일 수 있음 → First로 완화
+    Optional<PbComponent> findFirstByPage_PageIdAndPbIdOrderByComponentIdAsc(String pageId, String pbId);
 
     @EntityGraph(attributePaths = {"page", "page.project"})
     Optional<PbComponent> findWithPageAndProjectByComponentId(String componentId);
