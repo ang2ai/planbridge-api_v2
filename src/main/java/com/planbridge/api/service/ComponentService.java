@@ -113,6 +113,7 @@ public class ComponentService {
                     comp.setTreePath(cd.getTreePath());
                     if (cd.getDepthLevel() != null) comp.setDepthLevel(cd.getDepthLevel());
                     if (cd.getSortOrder() != null) comp.setSortOrder(cd.getSortOrder());
+                    comp.setStatus("ACTIVE"); // 이전 스캔에서 INACTIVE 처리됐다가 다시 나타난 경우 복구
                     changedCount++;
                 } else {
                     comp = PbComponent.builder()
@@ -144,7 +145,21 @@ public class ComponentService {
                     componentRepository.save(comp);
                 }
             }
+
+            // 3차: 이번 스캔에 없는 기존 컴포넌트는 INACTIVE 처리
+            // (삭제하면 정책 연결(FK)이 끊어지므로 삭제 대신 비활성화 — 트리 조회는 ACTIVE만 반환)
+            for (PbComponent existing : componentRepository.findByPage_PageIdOrderByDepthLevelAscSortOrderAsc(page.getPageId())) {
+                if (!pbIdMap.containsKey(existing.getPbId()) && "ACTIVE".equals(existing.getStatus())) {
+                    existing.setStatus("INACTIVE");
+                    componentRepository.save(existing);
+                }
+            }
         }
+
+        // 스냅샷은 delete-then-insert의 일부로 이전 이력도 함께 정리
+        // (자동 스캔이 새로고침마다 발사되어도 페이지당 최신 1건만 유지)
+        componentSnapshotRepository.deleteByComponent_Page_PageId(page.getPageId());
+        scanHistoryRepository.deleteByPage_PageId(page.getPageId());
 
         // 스캔 이력 저장
         PbScanHistory scanHistory = PbScanHistory.builder()
@@ -158,7 +173,7 @@ public class ComponentService {
                 .build();
         scanHistoryRepository.save(scanHistory);
 
-        // 각 컴포넌트에 대해 스냅샷 저장
+        // 각 컴포넌트에 대해 스냅샷 저장 (이전 스냅샷은 위에서 이미 삭제됨 — 최신 상태만 유지)
         if (!dedupedComponents.isEmpty()) {
             for (ScanDataRequest.ComponentData cd : dedupedComponents) {
                 PbComponent comp = pbIdMap.get(cd.getPbId());
