@@ -8,7 +8,8 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 @Entity
-@Table(name = "PB_COMPONENT")
+@Table(name = "PB_COMPONENT",
+        uniqueConstraints = @UniqueConstraint(name = "UK_PB_COMPONENT_PAGE_PBID", columnNames = {"PAGE_ID", "PB_ID"}))
 @Getter
 @Setter
 @NoArgsConstructor
