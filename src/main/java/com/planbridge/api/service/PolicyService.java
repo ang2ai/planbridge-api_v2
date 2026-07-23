@@ -61,8 +61,13 @@ public class PolicyService {
         });
 
         // 2. PB_POLICY_LINK 통해 연결된 정책
+        // 주의: findByComponent_ComponentId는 연결 링크만 조회할 뿐 정책 자체의
+        // status는 보지 않음. 정책 삭제는 소프트 삭제(status="DELETED")라서,
+        // 이 필터가 없으면 삭제된 정책도 링크가 남아있는 한 계속 표시됨
+        // (실제 버그: 사이드패널에서 삭제해도 화면에서 안 사라지던 원인).
         List<PbPolicyLink> links = policyLinkRepository.findByComponent_ComponentId(componentId);
         links.forEach(l -> {
+            if (!"ACTIVE".equals(l.getPolicy().getStatus())) return;
             String pid = l.getPolicy().getPolicyId();
             if (seen.add(pid)) {
                 PolicyResponse resp = PolicyResponse.from(l.getPolicy());
