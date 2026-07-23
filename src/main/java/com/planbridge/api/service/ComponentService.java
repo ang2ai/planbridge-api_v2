@@ -61,7 +61,9 @@ public class ComponentService {
 
     @Transactional
     public Map<String, Object> processScan(String projectId, ScanDataRequest req) {
-        PbProject project = projectRepository.findById(projectId)
+        // 프로젝트 행 잠금으로 동시 스캔을 직렬화 — 자동 스캔이 겹쳐 발사돼도
+        // 페이지/컴포넌트 find-or-create가 순차 실행되어 중복 생성 경쟁이 원천 제거됨
+        PbProject project = projectRepository.findWithLockByProjectId(projectId)
                 .orElseThrow(() -> new ResourceNotFoundException("Project", projectId));
 
         // 페이지 upsert
