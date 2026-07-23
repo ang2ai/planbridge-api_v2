@@ -67,8 +67,28 @@ public class ComponentService {
                 .orElseThrow(() -> new ResourceNotFoundException("Project", projectId));
 
         // 페이지 upsert
-        PbPage page = pageRepository.findFirstByProject_ProjectIdAndRoutePathOrderByPageIdAsc(projectId, req.getRoutePath())
-                .orElseGet(() -> {
+        Optional<PbPage> existingPage = pageRepository.findFirstByProject_ProjectIdAndRoutePathOrderByPageIdAsc(projectId, req.getRoutePath());
+
+        // 자동 스캔(DOM 변화 감지)이고 이 페이지에 이미 스캔된 컴포넌트가 있으면
+        // 아무것도 하지 않고 그대로 반환한다. 새로고침/화면 갱신마다 자동 스캔이
+        // 반복 발사되면서 스냅샷·이력이 계속 새로 쌓이던 것을 원천 차단.
+        // 수동 스캔(버튼/단축키)은 최신 상태로 항상 반영되도록 그대로 진행.
+        if ("AUTO".equals(req.getScanType()) && existingPage.isPresent()) {
+            long existingCount = componentRepository
+                    .findByPage_PageIdOrderByDepthLevelAscSortOrderAsc(existingPage.get().getPageId())
+                    .stream().filter(c -> "ACTIVE".equals(c.getStatus())).count();
+            if (existingCount > 0) {
+                Map<String, Object> skipped = new HashMap<>();
+                skipped.put("pageId", existingPage.get().getPageId());
+                skipped.put("totalComponents", existingCount);
+                skipped.put("newComponents", 0);
+                skipped.put("changedComponents", 0);
+                skipped.put("skipped", true);
+                return skipped;
+            }
+        }
+
+        PbPage page = existingPage.orElseGet(() -> {
                     PbPage newPage = PbPage.builder()
                             .project(project)
                             .routePath(req.getRoutePath())
